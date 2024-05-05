@@ -7,6 +7,7 @@ const (
 	INT = iota
 	// identifiers
 	IDENT
+	KEYWORD
 	// keywords
 	FUNCTION
 	LET
@@ -37,7 +38,7 @@ type Token struct {
 	Type    TokenType
 }
 
-var INDENTIFIERS = []string{"let", "fn"}
+var INDENTIFIERS = []string{"let", "fn", "return"}
 
 func isKeyword(literal string) bool {
 	return slices.Contains(INDENTIFIERS, literal)

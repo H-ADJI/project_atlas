@@ -90,13 +90,49 @@ func (l *Lexer) NextToken() Token {
 			return Token{Type: ASSIGN, Literal: string(char)}
 		}
 
-		// catching identifiers and keywords
-		for isLetter(char) {
+		if unicode.IsDigit(char) {
 			builder.WriteRune(char)
-			char, _, err = l.sourceCode.reader.ReadRune()
-			if err == io.EOF {
-				return Token{Type: EOF}
+			char, _, _ = l.sourceCode.reader.ReadRune()
+
+			for unicode.IsDigit(char) {
+				builder.WriteRune(char)
+				char, _, err = l.sourceCode.reader.ReadRune()
+				if err == io.EOF {
+					l.sourceCode.reader.UnreadRune()
+					return Token{Type: INT, Literal: builder.String()}
+				}
+
 			}
+
+			l.sourceCode.reader.UnreadRune()
+			return Token{Type: INT, Literal: builder.String()}
+
+		}
+		// catching identifiers and keywords
+		if isLetter(char) {
+			builder.WriteRune(char)
+			char, _, _ = l.sourceCode.reader.ReadRune()
+
+			for unicode.IsDigit(char) || isLetter(char) {
+				builder.WriteRune(char)
+				char, _, err = l.sourceCode.reader.ReadRune()
+				if err == io.EOF {
+					l.sourceCode.reader.UnreadRune()
+					literal := builder.String()
+					if isKeyword(literal) {
+						return Token{Type: KEYWORD, Literal: literal}
+					}
+					return Token{Type: IDENT, Literal: literal}
+				}
+
+			}
+
+			l.sourceCode.reader.UnreadRune()
+			literal := builder.String()
+			if isKeyword(literal) {
+				return Token{Type: KEYWORD, Literal: literal}
+			}
+			return Token{Type: IDENT, Literal: literal}
 		}
 
 		// default case if nothing above works
