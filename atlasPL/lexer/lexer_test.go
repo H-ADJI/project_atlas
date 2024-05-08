@@ -6,7 +6,7 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	sourceCode := "let plus_mult = fn(x){ return x + x , x * x };"
+	sourceCode := "let plus_mult = fn(x){ return x + x , x * x if x >= 0 else - (x + x), x * x  };"
 	tests := []struct {
 		expectedType    TokenType
 		expectedLiteral string
@@ -23,6 +23,21 @@ func TestNextToken(t *testing.T) {
 		{IDENT, "x"},
 		{PLUS, "+"},
 		{IDENT, "x"},
+		{COMMA, ","},
+		{IDENT, "x"},
+		{ASTERISK, "*"},
+		{IDENT, "x"},
+		{IF, "if"},
+		{IDENT, "x"},
+		{GTE, ">="},
+		{INT, "0"},
+		{ELSE, "else"},
+		{MINUS, "-"},
+		{LPAREN, "("},
+		{IDENT, "x"},
+		{PLUS, "+"},
+		{IDENT, "x"},
+		{RPAREN, ")"},
 		{COMMA, ","},
 		{IDENT, "x"},
 		{ASTERISK, "*"},

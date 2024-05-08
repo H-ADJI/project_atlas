@@ -19,6 +19,8 @@ func readSourceFile(filepath string) source {
 	file, err := os.Open(filepath)
 	if err != nil {
 		fmt.Println("could not open file : " + filepath)
+		r := bufio.NewReader(strings.NewReader(""))
+		return source{filename: filepath, reader: r}
 	}
 	r := bufio.NewReader(file)
 	return source{filename: filepath, reader: r}
