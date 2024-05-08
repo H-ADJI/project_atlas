@@ -72,6 +72,11 @@ func (l *Lexer) NextToken() Token {
 		case '-':
 			return Token{Type: MINUS, Literal: string(char)}
 		case '=':
+			next := l.peek()
+			if next == '=' {
+				l.sourceCode.reader.ReadRune()
+				return Token{Type: EQ, Literal: "=="}
+			}
 			return Token{Type: ASSIGN, Literal: string(char)}
 		case '/':
 			return Token{Type: SLASH, Literal: string(char)}
@@ -90,10 +95,25 @@ func (l *Lexer) NextToken() Token {
 		case ';':
 			return Token{Type: SEMICOLON, Literal: string(char)}
 		case '<':
+			next := l.peek()
+			if next == '=' {
+				l.sourceCode.reader.ReadRune()
+				return Token{Type: LTE, Literal: "<="}
+			}
 			return Token{Type: LT, Literal: string(char)}
 		case '>':
+			next := l.peek()
+			if next == '=' {
+				l.sourceCode.reader.ReadRune()
+				return Token{Type: GTE, Literal: ">="}
+			}
 			return Token{Type: GT, Literal: string(char)}
 		case '!':
+			next := l.peek()
+			if next == '=' {
+				l.sourceCode.reader.ReadRune()
+				return Token{Type: NOT_EQ, Literal: "!="}
+			}
 			return Token{Type: BANG, Literal: string(char)}
 		}
 
@@ -151,12 +171,8 @@ func isLetter(char rune) bool {
 	return unicode.IsLetter(char) || char == '_'
 }
 
-func (l *Lexer) Peek() (rune, error) {
-	char, _, err := l.sourceCode.reader.ReadRune()
-	if err != nil {
-		return 0, err
-	}
+func (l *Lexer) peek() rune {
+	char, _, _ := l.sourceCode.reader.ReadRune()
 	l.sourceCode.reader.UnreadRune()
-
-	return char, nil
+	return char
 }
