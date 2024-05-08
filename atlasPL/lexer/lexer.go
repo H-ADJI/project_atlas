@@ -71,6 +71,8 @@ func (l *Lexer) NextToken() Token {
 			return Token{Type: PLUS, Literal: string(char)}
 		case '-':
 			return Token{Type: MINUS, Literal: string(char)}
+		case '=':
+			return Token{Type: ASSIGN, Literal: string(char)}
 		case '/':
 			return Token{Type: SLASH, Literal: string(char)}
 		case '*':
@@ -87,8 +89,12 @@ func (l *Lexer) NextToken() Token {
 			return Token{Type: COMMA, Literal: string(char)}
 		case ';':
 			return Token{Type: SEMICOLON, Literal: string(char)}
-		case '=':
-			return Token{Type: ASSIGN, Literal: string(char)}
+		case '<':
+			return Token{Type: LT, Literal: string(char)}
+		case '>':
+			return Token{Type: GT, Literal: string(char)}
+		case '!':
+			return Token{Type: BANG, Literal: string(char)}
 		}
 
 		if unicode.IsDigit(char) {
