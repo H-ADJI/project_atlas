@@ -65,15 +65,16 @@ func (l *Lexer) NextToken() Token {
 			continue
 		}
 
+		// Special characters
 		switch char {
 		case '+':
 			return Token{Type: PLUS, Literal: string(char)}
 		case '-':
 			return Token{Type: MINUS, Literal: string(char)}
 		case '/':
-			return Token{Type: DIV, Literal: string(char)}
+			return Token{Type: SLASH, Literal: string(char)}
 		case '*':
-			return Token{Type: MULT, Literal: string(char)}
+			return Token{Type: ASTERISK, Literal: string(char)}
 		case '(':
 			return Token{Type: LPAREN, Literal: string(char)}
 		case ')':
@@ -119,8 +120,8 @@ func (l *Lexer) NextToken() Token {
 				if err == io.EOF {
 					l.sourceCode.reader.UnreadRune()
 					literal := builder.String()
-					if isKeyword(literal) {
-						return Token{Type: KEYWORD, Literal: literal}
+					if tokenType, ok := keywords[literal]; ok {
+						return Token{Type: tokenType, Literal: literal}
 					}
 					return Token{Type: IDENT, Literal: literal}
 				}
@@ -129,8 +130,8 @@ func (l *Lexer) NextToken() Token {
 
 			l.sourceCode.reader.UnreadRune()
 			literal := builder.String()
-			if isKeyword(literal) {
-				return Token{Type: KEYWORD, Literal: literal}
+			if tokenType, ok := keywords[literal]; ok {
+				return Token{Type: tokenType, Literal: literal}
 			}
 			return Token{Type: IDENT, Literal: literal}
 		}

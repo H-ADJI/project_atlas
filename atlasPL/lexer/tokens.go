@@ -1,25 +1,32 @@
 package lexer
 
-import "slices"
-
 const (
 	// literals
 	INT = iota
 	// identifiers
 	IDENT
-	KEYWORD
+
 	// keywords
 	FUNCTION
 	LET
-
-	// operations
+	TRUE
+	FALSE
+	IF
+	ELSE
+	RETURN
+	// operators
 	PLUS
 	MINUS
 	ASSIGN
-	DIV
-	MULT
-
-	// DELIMITER
+	SLASH
+	ASTERISK
+	BANG
+	EQ
+	NOT_EQ
+	GT
+	GTE
+	LT
+	LTE
 	COMMA
 	SEMICOLON
 	LPAREN
@@ -38,8 +45,12 @@ type Token struct {
 	Type    TokenType
 }
 
-var INDENTIFIERS = []string{"let", "fn", "return"}
-
-func isKeyword(literal string) bool {
-	return slices.Contains(INDENTIFIERS, literal)
+var keywords = map[string]TokenType{
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
